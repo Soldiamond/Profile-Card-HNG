@@ -3,7 +3,7 @@
 A responsive, accessible profile card component built with semantic HTML, modern CSS, and vanilla JavaScript.
 
 ## Live Demo
-[View Live on Netlify](https://your-username-profile-card.netlify.app)
+[View Live on GitHub Pages](https://soldiamond.github.io/Profile-Card-HNG)
 
 ##  Features
 - ✅ Fully responsive design (mobile, tablet, desktop)
@@ -118,3 +118,4 @@ Creative Graphic Designer
 HNG Internship Participant
 
 test-user-dislikes - Dislikes list
+
