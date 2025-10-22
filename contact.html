@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Me - Solution Abiola Owoche</title>
+    <link rel="stylesheet" href="assets/styles/main.css">
+</head>
+<body>
+    <!-- Navigation Header -->
+    <nav class="main-nav" data-testid="test-main-navigation">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="assets/SoLGrafix.png" alt="Solution Logo" width="40" height="40">
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html" data-testid="test-nav-home">Home</a></li>
+                <li><a href="about.html" data-testid="test-nav-about">About Me</a></li>
+                <li><a href="contact.html" data-testid="test-nav-contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Contact Form -->
+    <main class="page-container">
+        <div class="contact-container">
+            <form class="contact-form" data-testid="test-contact-form" novalidate>
+                <h1 class="form-title">Get In Touch</h1>
+                <p class="form-subtitle">Have a question or want to work together? Send me a message!</p>
+
+                <!-- Success Message -->
+                <div class="success-message" id="success-message" data-testid="test-contact-success">
+                    ✅ Thank you! Your message has been sent successfully.
+                </div>
+
+                <!-- Full Name -->
+                <div class="form-group">
+                    <label for="fullname" class="form-label">Full Name *</label>
+                    <input 
+                        type="text" 
+                        id="fullname" 
+                        class="form-input" 
+                        data-testid="test-contact-name"
+                        aria-describedby="name-error"
+                        required>
+                    <div class="error-message" id="name-error" data-testid="test-contact-error-name">
+                        Please enter your full name
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="form-group">
+                    <label for="email" class="form-label">Email Address *</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        class="form-input" 
+                        data-testid="test-contact-email"
+                        aria-describedby="email-error"
+                        required>
+                    <div class="error-message" id="email-error" data-testid="test-contact-error-email">
+                        Please enter a valid email address
+                    </div>
+                </div>
+
+                <!-- Subject -->
+                <div class="form-group">
+                    <label for="subject" class="form-label">Subject *</label>
+                    <input 
+                        type="text" 
+                        id="subject" 
+                        class="form-input" 
+                        data-testid="test-contact-subject"
+                        aria-describedby="subject-error"
+                        required>
+                    <div class="error-message" id="subject-error" data-testid="test-contact-error-subject">
+                        Please enter a subject
+                    </div>
+                </div>
+
+                <!-- Message -->
+                <div class="form-group">
+                    <label for="message" class="form-label">Message *</label>
+                    <textarea 
+                        id="message" 
+                        class="form-textarea" 
+                        data-testid="test-contact-message"
+                        aria-describedby="message-error"
+                        required
+                        minlength="10"></textarea>
+                    <div class="error-message" id="message-error" data-testid="test-contact-error-message">
+                        Message must be at least 10 characters long
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button 
+                    type="submit" 
+                    class="submit-btn" 
+                    data-testid="test-contact-submit">
+                    Send Message
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('[data-testid="test-contact-form"]');
+            const successMessage = document.getElementById('success-message');
+            const submitButton = document.querySelector('[data-testid="test-contact-submit"]');
+            
+            // Form validation function
+            function validateField(field) {
+                const value = field.value.trim();
+                const errorElement = document.getElementById(field.id + '-error');
+                let isValid = true;
+                
+                // Reset field state
+                field.classList.remove('error');
+                if (errorElement) {
+                    errorElement.style.display = 'none';
+                }
+                
+                // Validate required fields
+                if (field.hasAttribute('required') && !value) {
+                    field.classList.add('error');
+                    if (errorElement) {
+                        errorElement.style.display = 'block';
+                    }
+                    isValid = false;
+                }
+                
+                // Validate email format
+                if (field.type === 'email' && value) {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(value)) {
+                        field.classList.add('error');
+                        if (errorElement) {
+                            errorElement.style.display = 'block';
+                        }
+                        isValid = false;
+                    }
+                }
+                
+                // Validate message length
+                if (field.id === 'message' && value.length > 0 && value.length < 10) {
+                    field.classList.add('error');
+                    if (errorElement) {
+                        errorElement.style.display = 'block';
+                    }
+                    isValid = false;
+                }
+                
+                return isValid;
+            }
+            
+            // Real-time validation on blur
+            const inputs = form.querySelectorAll('input, textarea');
+            inputs.forEach(input => {
+                input.addEventListener('blur', () => {
+                    validateField(input);
+                });
+                
+                input.addEventListener('input', () => {
+                    // Clear error when user starts typing
+                    if (input.classList.contains('error')) {
+                        input.classList.remove('error');
+                        const errorElement = document.getElementById(input.id + '-error');
+                        if (errorElement) {
+                            errorElement.style.display = 'none';
+                        }
+                    }
+                });
+            });
+            
+            // Form submission
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                console.log('Form submitted'); // Debug log
+                
+                let isFormValid = true;
+                
+                // Validate all fields
+                inputs.forEach(input => {
+                    if (!validateField(input)) {
+                        isFormValid = false;
+                    }
+                });
+                
+                console.log('Form valid:', isFormValid); // Debug log
+                
+                if (isFormValid) {
+                    // Show success message
+                    successMessage.style.display = 'block';
+                    console.log('Success message shown'); // Debug log
+                    
+                    // Reset form
+                    form.reset();
+                    
+                    // Hide success message after 5 seconds
+                    setTimeout(() => {
+                        successMessage.style.display = 'none';
+                    }, 5000);
+                } else {
+                    console.log('Form has errors'); // Debug log
+                }
+            });
+            
+            // Add click event listener as backup
+            submitButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                form.dispatchEvent(new Event('submit'));
+            });
+        });
+    </script>
+</body>
+</html>
